@@ -1,0 +1,25 @@
+parameters:
+- name: environment
+  type: string
+- name: pipelineResource
+  type: string
+- name: deploymentSteps
+  type: stepList
+- name: artifactName
+  type: string
+  default: drop
+
+stages:
+- stage: Deploy
+  displayName: Deploy
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy artifact
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: ${{ parameters.pipelineResource }}
+            artifact: ${{ parameters.artifactName }}
+          - ${{ parameters.deploymentSteps }}

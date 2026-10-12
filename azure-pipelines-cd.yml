@@ -1,0 +1,21 @@
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  pipelines:
+  - pipeline: ci
+    source: CI
+    trigger: true
+
+stages:
+- template: .azure-pipelines/cd.yml
+  parameters:
+    environment: production
+    pipelineResource: ci
+    artifactName: drop
+    deploymentSteps:
+    - bash: |
+        echo "Configure os passos de deploy do projeto em azure-pipelines-cd.yml." >&2
+        exit 1

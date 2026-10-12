@@ -1,0 +1,24 @@
+parameters:
+- name: buildSteps
+  type: stepList
+- name: testSteps
+  type: stepList
+  default: []
+- name: artifactName
+  type: string
+  default: drop
+- name: artifactPath
+  type: string
+  default: $(Build.ArtifactStagingDirectory)
+
+steps:
+- checkout: self
+- bash: mkdir -p "$(Build.ArtifactStagingDirectory)"
+  displayName: Prepare artifact staging directory
+- ${{ parameters.buildSteps }}
+- ${{ parameters.testSteps }}
+- task: PublishPipelineArtifact@1
+  displayName: Publish build artifact
+  inputs:
+    targetPath: ${{ parameters.artifactPath }}
+    artifact: ${{ parameters.artifactName }}
